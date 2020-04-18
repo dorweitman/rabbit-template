@@ -12,7 +12,7 @@ const main = async () => {
 
     const testFunction = (message) => {
         console.log(message)
-        return {'work': 445};
+        return message;
     }; 
 
     // await rabbit.consumer(queueName, testFunction);
