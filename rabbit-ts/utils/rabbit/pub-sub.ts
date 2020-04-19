@@ -9,39 +9,45 @@ import {
     objectToBuffer,
 } from './index';
 
-export default class RabbitMQProdCon extends RabbitMQ {
+
+export default class RabbitMQPubSub extends RabbitMQ {
     private channel!: amqp.ConfirmChannel;
 
     constructor(connectionUri: string) {
         super(connectionUri);
     }
 
-    async producer(
-        queue: string,
-        options = defaultOptions
+    async publisher(
+        exchange: string,
+        exchangeType: string,
+        routingKey: string = '',
+        options: RabbitMQOptions = defaultOptions
     ) {
         if (!this.connection) {
             throw new Error('No connection available');
         }
-
+        
         if (!this.channel) {
             this.channel = await this.connection.createConfirmChannel();
+
+            this.channel.on('error', channelErrorHandler);
+
+            await this.channel.assertExchange(exchange, exchangeType, options.exchange);
         }
 
-        this.channel.on('error', channelErrorHandler);
-
-        this.channel.assertQueue(queue, options.queue);
-
-        return (message: Object) => sendToQueue(this.channel, queue, objectToBuffer(message), options.message);
+        return (message: Object) => publishToExchange(this.channel, exchange, routingKey, objectToBuffer(message), options.message);
     }
 
-    async consumer(
-        queue: string,
+    async subscriber(
+        exchange: string,
+        exchangeType: string,
         messageHandler: (
             message: Object,
             fields?: amqp.MessageFields,
             properties?: amqp.MessageProperties
         ) => Promise<void> | void,
+        queue: string = '',
+        pattern: string = '',
         options: RabbitMQOptions = defaultOptions
     ) {
         if (!this.connection) {
@@ -52,28 +58,35 @@ export default class RabbitMQProdCon extends RabbitMQ {
             this.channel = await this.connection.createConfirmChannel();
         }
 
-        this.channel.assertQueue(queue, options.queue);
+        await this.channel.assertExchange(exchange, exchangeType, options.exchange);
 
         if (options.channel.prefetch) {
             this.channel.prefetch(options.channel.prefetch);
         }
 
+        const assertedQueue = await this.channel.assertQueue(queue, options.queue);
+
+        this.channel.on('error', channelErrorHandler);
+
+        await this.channel.bindQueue(assertedQueue.queue, exchange, pattern);
+
         this.channel.consume(
-            queue,
+            assertedQueue.queue,
             proccessMessage(this.channel, messageHandler),
             options.consumer,
         );
     }
 }
 
-function sendToQueue(
+function publishToExchange(
     channel: amqp.ConfirmChannel,
-    queue: string,
+    exchange: string,
+    routingKey: string,
     message: Buffer,
     options: amqp.Options.Publish
 ): Promise<any> {
     return new Promise((resolve, reject) => {
-        channel.sendToQueue(queue, message, options, (err, ok) => {
+        channel.publish(exchange, routingKey, message, options, (err, ok) => {
             if (err) {
                 reject(err);
             } else {
@@ -82,3 +95,5 @@ function sendToQueue(
         });
     });
 };
+
+module.exports = RabbitMQPubSub;

@@ -82,7 +82,7 @@ export function sendToQueue(
     queue: string,
     message: Buffer,
     options: amqp.Options.Publish
-): Promise<Error | amqp.Replies.Empty> {
+): Promise<any> {
     return new Promise((resolve, reject) => {
         channel.sendToQueue(queue, message, options, (err, ok) => {
             if (err) {
@@ -93,7 +93,7 @@ export function sendToQueue(
         });
     });
 };
-    
+
 export function connectionErrorHandler(error: Error) {
     console.error('[RabbitMQ] connection error:', error);
 };
