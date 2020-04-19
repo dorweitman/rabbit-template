@@ -3,7 +3,8 @@ const {
     defaultOptions,
     proccessMessage,
     channelErrorHandler,
-    objectToBuffer
+    objectToBuffer,
+    sendToQueue,
 } = require('./index');
 
 /**
@@ -22,6 +23,10 @@ class RabbitMQProdCon extends RabbitMQ {
      * @return {Function} Asynchronous function to send messages 
      */
     async producer(queue, options = defaultOptions) {
+        if (!this.connection) {
+            throw new Error('No connection available');
+        }
+
         if (!this.channel) {
             this.channel = await this.connection.createConfirmChannel();
         }
@@ -61,17 +66,5 @@ class RabbitMQProdCon extends RabbitMQ {
         );
     }
 }
-
-const sendToQueue = (channel, queue, message, options) => {
-    return new Promise((resolve, reject) => {
-        channel.sendToQueue(queue, message, options, (err, ok) => {
-            if (err) {
-                reject(err);
-            } else {
-                resolve(ok);
-            }
-        });
-    });
-};
 
 module.exports = RabbitMQProdCon;

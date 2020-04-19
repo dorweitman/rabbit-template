@@ -9,7 +9,6 @@ const defaultOptions = {
     },
     message: {
         persistent: true,
-        contentType: 'application/json',
     },
     exchange: {
         durable: true,
