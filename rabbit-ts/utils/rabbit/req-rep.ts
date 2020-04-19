@@ -96,6 +96,7 @@ function proccessReturnedMessage(
         if (!message) {
             return;
         }
+        
         const { content, fields, properties } = message;
         const messageString = content.toString();
 
