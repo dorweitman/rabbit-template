@@ -25,6 +25,10 @@ class RabbitMQReqRep extends RabbitMQ {
      * @return {Function} Asynchronous function to send messages 
      */
     async client(queue, messageHandler, options = defaultOptions) {
+        if (!this.connection) {
+            throw new Error('No connection available');
+        }
+        
         if (!this.channel) {
             this.channel = await this.connection.createConfirmChannel();
         }

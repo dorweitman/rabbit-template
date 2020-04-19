@@ -24,6 +24,10 @@ class RabbitMQPubSub extends RabbitMQ {
      * @return {Function} Asynchronous function to send messages     
     **/
     async publisher(exchange, exchangeType, routingKey = '', options = defaultOptions) {
+        if (!this.connection) {
+            throw new Error('No connection available');
+        }
+        
         if (!this.channel) {
             this.channel = await this.connection.createConfirmChannel();
 
