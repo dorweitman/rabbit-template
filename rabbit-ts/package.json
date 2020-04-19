@@ -12,8 +12,11 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@types/amqplib": "^0.5.13",
     "amqplib": "^0.5.5",
     "uuid": "^7.0.3"
+  },
+  "devDependencies": {
+    "@types/amqplib": "^0.5.13",
+    "@types/uuid": "^7.0.2"
   }
 }

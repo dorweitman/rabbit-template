@@ -9,7 +9,6 @@ import {
     objectToBuffer,
 } from './index';
 
-
 export default class RabbitMQPubSub extends RabbitMQ {
     private channel!: amqp.ConfirmChannel;
 
@@ -26,7 +25,7 @@ export default class RabbitMQPubSub extends RabbitMQ {
         if (!this.connection) {
             throw new Error('No connection available');
         }
-        
+
         if (!this.channel) {
             this.channel = await this.connection.createConfirmChannel();
 
@@ -95,5 +94,3 @@ function publishToExchange(
         });
     });
 };
-
-module.exports = RabbitMQPubSub;

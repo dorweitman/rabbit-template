@@ -18,7 +18,7 @@ export default class RabbitMQProdCon extends RabbitMQ {
 
     async producer(
         queue: string,
-        options = defaultOptions
+        options: RabbitMQOptions = defaultOptions
     ) {
         if (!this.connection) {
             throw new Error('No connection available');
