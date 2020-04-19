@@ -1,4 +1,4 @@
-const uuid = require('uuid');
+const { v4: uuid } = require('uuid');
 
 const {
     RabbitMQ,
@@ -28,7 +28,7 @@ class RabbitMQReqRep extends RabbitMQ {
         if (!this.connection) {
             throw new Error('No connection available');
         }
-        
+
         if (!this.channel) {
             this.channel = await this.connection.createConfirmChannel();
         }
@@ -37,7 +37,7 @@ class RabbitMQReqRep extends RabbitMQ {
 
         const assertedQueue = await this.channel.assertQueue('', options.queue);
 
-        const correlationId = uuid.v4();
+        const correlationId = uuid();
 
         this.channel.consume(
             assertedQueue.queue,
