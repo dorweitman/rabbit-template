@@ -1,0 +1,19 @@
+{
+  "name": "rabbit-test",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc",
+    "consumer": "node ./dist/src/consumer.js",
+    "producer": "node ./dist/src/producer.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@types/amqplib": "^0.5.13",
+    "amqplib": "^0.5.5",
+    "uuid": "^7.0.3"
+  }
+}
