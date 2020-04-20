@@ -12,10 +12,6 @@ import {
 export default class RabbitMQPubSub extends RabbitMQ {
     private channel!: amqp.ConfirmChannel;
 
-    constructor(connectionUri: string) {
-        super(connectionUri);
-    }
-
     async publisher(
         exchange: string,
         exchangeType: string,

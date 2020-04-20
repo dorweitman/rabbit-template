@@ -33,7 +33,7 @@ export class RabbitMQ {
     private connectionUri: string;
     protected connection: amqp.Connection | undefined;
 
-    constructor(connectionUri: string) {
+    constructor(connectionUri: string = 'amqp://localhost') {
         this.connectionUri = connectionUri;
     }
 

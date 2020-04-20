@@ -13,10 +13,6 @@ import {
 export default class RabbitMQReqRep extends RabbitMQ {
     private channel!: amqp.ConfirmChannel;
 
-    constructor(connectionUri: string) {
-        super(connectionUri);
-    }
-
     async client(
         queue: string,
         messageHandler: (

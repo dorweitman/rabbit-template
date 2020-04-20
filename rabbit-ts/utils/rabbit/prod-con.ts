@@ -12,10 +12,6 @@ import {
 export default class RabbitMQProdCon extends RabbitMQ {
     private channel!: amqp.ConfirmChannel;
 
-    constructor(connectionUri: string) {
-        super(connectionUri);
-    }
-
     async producer(
         queue: string,
         options: RabbitMQOptions = defaultOptions
