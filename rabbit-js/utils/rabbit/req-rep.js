@@ -13,10 +13,6 @@ const {
  * @extends RabbitMQ
  */
 class RabbitMQReqRep extends RabbitMQ {
-    constructor(connectionUri) {
-        super(connectionUri);
-    }
-
     /**
      * Creates an RPC Client 
      * @param {string} queue - Name of queue to send messages 
@@ -81,36 +77,40 @@ class RabbitMQReqRep extends RabbitMQ {
     }
 }
 
-const proccessReturnedMessage = (correlationId, messageHandler) => {
-    return async (message) => {
-        const { content, fields, properties } = message;
-        const messageString = content.toString();
+const proccessReturnedMessage = (correlationId, messageHandler) => async (message) => {
+    if (!message) {
+        return;
+    }
+    
+    const { content, fields, properties } = message;
+    const messageString = content.toString();
 
-        if (properties.correlationId === correlationId) {
-            await messageHandler(JSON.parse(messageString), fields, properties);
-        }
+    if (properties.correlationId === correlationId) {
+        await messageHandler(JSON.parse(messageString), fields, properties);
     }
 };
 
-const replyProcessedMessage = (channel, messageHandler, options) => {
-    return async (message) => {
-        const { content, fields, properties } = message;
-        const { replyTo, correlationId } = properties;
-        const messageString = content.toString();
+const replyProcessedMessage = (channel, messageHandler, options) => async (message) => {
+    if (!message) {
+        return;
+    }
 
-        try {
-            const newMessage = await messageHandler(JSON.parse(messageString), fields, properties);
+    const { content, fields, properties } = message;
+    const { replyTo, correlationId } = properties;
+    const messageString = content.toString();
 
-            await sendToQueue(channel, replyTo, objectToBuffer(newMessage), {
-                correlationId,
-                ...options,
-            });
+    try {
+        const newMessage = await messageHandler(JSON.parse(messageString), fields, properties);
 
-            channel.ack(message);
-        } catch (err) {
-            channel.nack(message, false, false);
-        }
-    };
+        await sendToQueue(channel, replyTo, objectToBuffer(newMessage), {
+            correlationId,
+            ...options,
+        });
+
+        channel.ack(message);
+    } catch (err) {
+        channel.nack(message, false, false);
+    }
 };
 
 module.exports = RabbitMQReqRep; 

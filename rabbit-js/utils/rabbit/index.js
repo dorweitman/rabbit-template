@@ -25,7 +25,7 @@ class RabbitMQ {
      * Create a rabbit connection.
      * @param {string} connectionUri - The connection uri.
      */
-    constructor(connectionUri) {
+    constructor(connectionUri = 'amqp://localhost') {
         this.connectionUri = connectionUri;
     }
 
@@ -44,19 +44,21 @@ class RabbitMQ {
     }
 }
 
-const proccessMessage = (channel, messageHandler) => {
-    return async (message) => {
-        const { content, fields, properties } = message;
-        const messageString = content.toString();
+const proccessMessage = (channel, messageHandler) => async (message) => {
+    if (!message) {
+        return;
+    }
+    
+    const { content, fields, properties } = message;
+    const messageString = content.toString();
 
-        try {
-            await messageHandler(JSON.parse(messageString), fields, properties);
+    try {
+        await messageHandler(JSON.parse(messageString), fields, properties);
 
-            channel.ack(message);
-        } catch (err) {
-            channel.nack(message, false, false);
-        }
-    };
+        channel.ack(message);
+    } catch (err) {
+        channel.nack(message, false, false);
+    }
 };
 
 const sendToQueue = (channel, queue, message, options) => {
@@ -79,9 +81,7 @@ const channelErrorHandler = (error) => {
     console.error('[RabbitMQ] channel error:', error);
 };
 
-const objectToBuffer = (obj) => {
-    return Buffer.from(JSON.stringify(obj)); 
-}; 
+const objectToBuffer = obj => Buffer.from(JSON.stringify(obj));
 
 module.exports = {
     RabbitMQ,

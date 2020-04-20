@@ -11,10 +11,6 @@ const {
  * @extends RabbitMQ
  */
 class RabbitMQPubSub extends RabbitMQ {
-    constructor(connectionUri) {
-        super(connectionUri);
-    }
-
     /**
      * Creates a Rabbit Publisher 
      * @param {string} exchange - Exchage name 

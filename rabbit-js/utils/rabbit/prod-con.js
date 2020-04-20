@@ -12,10 +12,6 @@ const {
  * @extends RabbitMQ
  */
 class RabbitMQProdCon extends RabbitMQ {
-    constructor(connectionUri) {
-        super(connectionUri);
-    }
-
     /**
      * Creates a RabbitMQ Producer
      * @param {string} queue - Name of queue to send messages 
