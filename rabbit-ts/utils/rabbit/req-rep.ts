@@ -10,6 +10,10 @@ import {
     objectToBuffer,
 } from './index';
 
+/**
+ * Class implementing rabbitmq request/reply (rpc) model
+ * @extends RabbitMQ
+ */
 export default class RabbitMQReqRep extends RabbitMQ {
     private channel!: amqp.ConfirmChannel;
 

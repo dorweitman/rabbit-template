@@ -9,6 +9,10 @@ import {
     objectToBuffer,
 } from './index';
 
+/**
+ * Class implementing rabbitmq producer/consumer model
+ * @extends RabbitMQ
+ */
 export default class RabbitMQProdCon extends RabbitMQ {
     private channel!: amqp.ConfirmChannel;
 

@@ -5,7 +5,7 @@ export interface RabbitMQOptions {
     channel: {
         prefetch?: number;
     };
-    message: amqp.Options.Publish
+    message: amqp.Options.Publish; 
     exchange: amqp.Options.AssertExchange;
     consumer: amqp.Options.Consume;
 }
