@@ -7,7 +7,6 @@ const main = async () => {
 
     const queueName = 'queue-name';
 
-
     const testFunction = (message) => {
         console.log(message)
     };

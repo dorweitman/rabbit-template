@@ -13,7 +13,6 @@ const main = async () => {
         await senderFunction({ text: `Hello World #${i}` });
     }
 
-
     await rabbit.closeConnection();
     console.log('Connection closed');
 };
