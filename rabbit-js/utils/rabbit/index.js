@@ -75,6 +75,8 @@ const sendToQueue = (channel, queue, message, options) => {
 
 const connectionErrorHandler = (error) => {
     console.error('[RabbitMQ] connection error:', error);
+
+    process.exit(1); 
 };
 
 const channelErrorHandler = (error) => {

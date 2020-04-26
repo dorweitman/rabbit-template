@@ -1,24 +1,17 @@
-import RabbitMQ from '../utils/rabbit/req-rep';
+import RabbitMQ from '../utils/rabbit/prod-con';
 
 const main = async () => {
-    const rabbit = new RabbitMQ('amqp://localhost');
+    const rabbit = new RabbitMQ();
     
     await rabbit.initialize();
 
-    const queueName = '085505440';
-    const exchangeName = 'log11456'; 
-    const exchangeType = 'fanout'; 
-
+    const queueName = 'queue-name';
 
     const testFunction = (message: Object) => {
         console.log(message); 
-        return message;
     }; 
-
   
-    // await rabbit.consumer(queueName, testFunction);
-    // await rabbit.subscriber(exchangeName, exchangeType, testFunction);
-    await rabbit.server(queueName, testFunction); 
+    await rabbit.consumer(queueName, testFunction);
 };
 
 main().catch(err => {

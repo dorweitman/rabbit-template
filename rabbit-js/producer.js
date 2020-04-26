@@ -1,27 +1,21 @@
-const RabbitMQ = require('./utils/rabbit/req-rep');
+const RabbitMQ = require('./utils/rabbit/prod-con');
 
 const main = async () => {
-    const rabbit = new RabbitMQ('amqp://localhost');
+    const rabbit = new RabbitMQ();
 
     await rabbit.initialize();
 
-    const queueName = '12341234567'; 
-    const exchangeName = 'log1145'; 
-    const exchangeType = 'fanout'; 
-    
-    // const senderFunction = await rabbit.producer(queueName);
-    // const senderFunction = await rabbit.publisher(exchangeName, exchangeType);
+    const queueName = 'queue-name'; 
 
-    const testFunction = (message) => console.log(message); 
-    const senderFunction = await rabbit.client('rpc_queue1', testFunction); 
+    const senderFunction = await rabbit.producer(queueName);
 
     for (let i = 0; i < 20; i++) {
         await senderFunction({ text: `Hello World #${i}` });
     }
 
 
-    // await rabbit.closeConnection();
-    // console.log('Connection closed');
+    await rabbit.closeConnection();
+    console.log('Connection closed');
 };
 
 main().catch(err => {
