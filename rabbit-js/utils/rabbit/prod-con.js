@@ -16,7 +16,7 @@ class RabbitMQProdCon extends RabbitMQ {
      * Creates a RabbitMQ Producer
      * @param {string} queue - Name of queue to send messages 
      * @param {object} [options] - RabbitMQ configuration 
-     * @return {Function} Asynchronous function to send messages 
+     * @return {Promise} Asynchronous function to send messages 
      */
     async producer(queue, options = defaultOptions) {
         if (!this.connection) {

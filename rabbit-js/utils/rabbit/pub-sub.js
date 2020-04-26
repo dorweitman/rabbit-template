@@ -17,7 +17,7 @@ class RabbitMQPubSub extends RabbitMQ {
      * @param {string} exchangeType - Exchange type
      * @param {string} [routingKey] - Routing messages key 
      * @param {object} [options] - RabbitMQ configuration 
-     * @return {Function} Asynchronous function to send messages     
+     * @return {Promise} Asynchronous function to send messages     
     **/
     async publisher(exchange, exchangeType, routingKey = '', options = defaultOptions) {
         if (!this.connection) {

@@ -18,7 +18,7 @@ class RabbitMQReqRep extends RabbitMQ {
      * @param {string} queue - Name of queue to send messages 
      * @param {Function} messageHandler - Function to handle recieved messages 
      * @param {object} [options] - RabbitMQ configuration 
-     * @return {Function} Asynchronous function to send messages 
+     * @return {Promise} Asynchronous function to send messages 
      */
     async client(queue, messageHandler, options = defaultOptions) {
         if (!this.connection) {
